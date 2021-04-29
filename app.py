@@ -10,7 +10,13 @@ def get_main_page():
 
 @app.route('/request1', methods=['GET', 'POST'])
 def request_page_action1():
-    return render_template("request1.html")
+    lst1 = ['Item1', 'Item2']
+    return render_template("request1.html", form1_select=lst1, form1_select_len=len(lst1))
+
+
+@app.route('/request1_handled', methods=['GET', 'POST'])
+def request1_handle():
+    return 'Hellow'
 
 
 @app.route('/request2', methods=['GET', 'POST'])
