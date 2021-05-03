@@ -1,20 +1,20 @@
 {% extends "base_request.html" %}
 {% block content %}
 
-<body style="background-image: url('../static/images/req1.png');">
+<body style="background-image: url('../static/images/req3.png');">
 
-<div class="wrapper" id="wrapper-id1">
-    Для агронома
-    <form action="{{ url_for('request1_handle') }}" method="post">
+<div class="wrapper" id="wrapper-id3">
+    Для споживача
+    <form action="{{ url_for('request3_handle') }}" method="post">
 
-        <select name="ag_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+        <select name="cus_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
-            {% for id, name in agronom_lst %}
+            {% for id, name in customer_lst %}
                 <option value="{{ id }}">{{ name }}</option>
             {% endfor %}
         </select>
 
-        знайти усiх споживачiв, яким вiн продавав продукт хоча б
+        знайти усiх агрономів, які проводили для нього дегустацію хоча б
         <input type="number" name="n_times" class="n-picker">
 
 
