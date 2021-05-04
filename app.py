@@ -18,5 +18,10 @@ def request_page_action2():
     return render_template("request2.html")
 
 
+@app.route('/request3', methods=['GET', 'POST'])
+def request_page_action3():
+    return render_template("request3.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)

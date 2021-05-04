@@ -1,7 +1,8 @@
 body {
     background-repeat: no-repeat;
     background-position-x: center;
-    background-size: 100%;
+    /*background-position-y: -5%;*/
+    background-size: 90%;
     font-family: Poppins-Regular;
     overflow-x: hidden;
 }
@@ -14,14 +15,17 @@ body {
 .wrapper {
     padding: 15% 60px;
     width: 40%;
+    line-height: normal;
 }
 
 .wrapper-2 {
     padding: 30% 60px;
+    line-height: normal;
 }
 
 .wrapper-3 {
     padding: 20% 60px 300px 55%;
+    line-height: normal;
 }
 
 .wrapper h1 {
