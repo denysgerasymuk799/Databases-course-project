@@ -1,15 +1,25 @@
-{% extends "base_request.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AppLab</title>
+    <link href="../static/css/reset.css" rel="stylesheet" type="text/css" >
 
-<body style="background-image: url('../static/images/request2.png'); background-position-y: 3%;">
+    <link href="../static/css/fonts.css" rel="stylesheet" type="text/css">
 
-<div class="wrapper">
-    Для агронома
+    <link href="../static/css/request_styles.css" rel="stylesheet" type="text/css">
 
-    <select name="" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
-                             onchange='this.size=1; this.blur();'>
-        <option value="">One</option>
-        <option value="">Two</option>
+</head>
+
+<body style="background-image: url('../static/images/request2.png'); background-position-y: 5%;">
+
+<div class="wrapper wrapper-2">
+    <h1>For agronomist </h1>
+
+    <select class="select" name="" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+            onchange='this.size=1; this.blur();'>
+        <option value="">Name</option>
+        <option value="">Jack</option>
         <option value="">Three</option>
         <option value="">Four</option>
         <option value="">Five</option>
@@ -20,11 +30,11 @@
         <option value="">Ten</option>
     </select>
 
-    знайти усiх споживачiв, яким вiн продавав продукт хоча б
-    <select name="" id="1" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+    <h1> find all customers that he sold them products </h1>
+    <select class="select" name="" id="1" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
             onchange='this.size=1; this.blur();'>
-        <option value="">One2</option>
-        <option value="">Two0</option>
+        <option value="">Number</option>
+        <option value="">2</option>
         <option value="">Three2</option>
         <option value="">Four0</option>
         <option value="">Five</option>
@@ -34,9 +44,13 @@
         <option value="">Nine</option>
         <option value="">Ten</option>
     </select>
-    разiв завказаний перiод (з дати F по дату T)
+
+    <h1> times for dates: from </h1>
+    <input class="select" type="date" name="date-of-birth" class="date-picker">
+
+    <h1> to </h1>
+    <input class="select" type="date" name="date-of-birth" class="date-picker">
 </div>
 
 </body>
-
-{% endblock %}
+</html>
