@@ -7,10 +7,9 @@ db_string = "postgres://admin:donotusethispassword@aws-us-east-1-portal.19.dblay
 db = create_engine(db_string)
 
 app = Flask(__name__)
+
 # FOR sessions
 app.secret_key = "SOMESECRET"
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])
