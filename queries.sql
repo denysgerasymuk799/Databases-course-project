@@ -1,61 +1,61 @@
--- 1
+-- 1 Works
 SELECT customer_name FROM Customer WHERE customer_id IN 
-(SELECT * FROM
+(SELECT customer_id FROM
 (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = "A" 
-	AND order_date BETWEEN "F" AND "T" GROUP BY customer_id) 
-WHERE num > "N");
+	AND order_date BETWEEN 'F' AND 'T' GROUP BY customer_id) h 
+WHERE h.num > "N");
 
---2 
-SELECT product_name FROM Product WHERE product_id IN (SELECT DISTINCT product_id FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN "F" AND "T");
+--2 Works
+SELECT product_name FROM Product WHERE product_id IN (SELECT DISTINCT product_id FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN 'F' AND 'T');
 
---3
+--3 Works
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN
-(SELECT * FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
+(SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
 Degustation INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id 
-WHERE Degustation_Customer.customer_id = "C" GROUP BY agronomist_id) WHERE num > "N");
+WHERE Degustation_Customer.customer_id = "C" GROUP BY agronomist_id) h WHERE h.num > "N");
 
---4
+--4 Works
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
 (SELECT DISTINCT agronomist_id FROM Trip_Agronomist WHERE agronomist_id != "A" AND trip_id IN
-(SELECT * FROM Trip WHERE trip_date BETWEEN "F" AND "T AND trip_id IN 
-(SELECT * FROM Trip_Agronomist WHERE agronomist_id = "A")));
+(SELECT trip_id FROM business_trip WHERE trip_date BETWEEN "F" AND "T" AND trip_id IN 
+(SELECT trip_id FROM Trip_Agronomist WHERE agronomist_id = "A")));
  
---5
+--5 Works
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
-(SELECT * FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN "F" AND "T" ) 
+(SELECT agronomist_id FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN "F" AND "T" )
 AND agronomist_id IN
-(SELECT * FROM Degustation WHERE degustation_id IN 
-(SELECT * FROM customer_id WHERE customer_id = "C") 
+(SELECT agronomist_id FROM Degustation WHERE degustation_id IN 
+(SELECT * FROM degustation_customer WHERE customer_id = "C")
  AND degustation_date BETWEEN "F" AND "T");
 
---6
+--6 Works
 SELECT customer_name FROM Customer WHERE customer_id IN
-(SELECT * FROM 
- (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering WHERE order_date BETWEEN "F" AND "T" GROUP BY customer_id)
- WHERE num > "N");
+(SELECT customer_id FROM 
+ (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering WHERE order_date BETWEEN "F" AND "T" GROUP BY customer_id) h
+ WHERE h.num > "N");
  
---7
+--7 Works
  SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN (
- SELECT * FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest WHERE harvest_date BETWEEN "F" AND "T" GROUP BY agronomist_id)
- WHERE num > "N");
+ SELECT * FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest WHERE harvest_date BETWEEN "F" AND "T" GROUP BY agronomist_id) h
+ WHERE h.num > "N");
  
- --8
-SELECT DISTINCT degustation_id FROM Degustation INNER JOIN Degustation_Customer ON 
+ --8 Works
+SELECT DISTINCT Degustation.degustation_id FROM Degustation INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id 
 WHERE Degustation_Customer.customer_id = "C" AND Degustation.agronomist_id = "A";
 
---9
+--9 Works
 SELECT product_id, COUNT(product_id) FROM Degustation WHERE degustation_id IN (
-SELECT * FROM (SELECT degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
+SELECT * FROM (SELECT Degustation.degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
 INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id  
-WHERE degustation_date BETWEEN "F" AND "T" AND agronomist_id = "A" GROUP BY degustation_id) WHERE num > "N") GROUP BY product_id;
+WHERE degustation_date BETWEEN "F" AND "T" AND agronomist_id = "A" GROUP BY degustation_id) h WHERE h.num > "N") GROUP BY product_id;
 
---10
+--10 Not done
 
 
---11
+--11 Works
 CREATE OR REPLACE VIEW hrvsts AS (SELECT sort_name, f.agronomist_name, harvest_date, 
     CASE 
       WHEN trips IS NULL THEN 0 
@@ -80,7 +80,7 @@ FROM hrvsts
 GROUP BY sort_name
 ORDER BY av_trips DESC
 
---12
+--12 Works
 SELECT product_name, CAST(returned AS DECIMAL)/bought * 100 perc FROM
 (SELECT d.product_name, bought, CASE 
    WHEN returned IS NULL THEN 0
