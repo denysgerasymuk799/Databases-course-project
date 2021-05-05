@@ -54,3 +54,65 @@ body {
     background-color: #fff;
     background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
+
+/* =============================== submit button =============================== */
+.btn-container {
+    width: 20vw;
+    height: 10vw;
+
+    position: relative;
+    left: 30%;
+    margin-top: 3vw;
+}
+
+.submit-btn {
+    display: inline-block;
+
+    width: 10vw;
+    height: 3vw;
+
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #02741e;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 1em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 1vw;
+    color: white;
+    background-color: #02741e;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    color: #02741e;
+    background-color: #FFFFFF;
+}
+
+@media all and (max-width: 30em) {
+    .submit-btn {
+        display: block;
+        margin: 0.4em auto;
+    }
+}
+
+/* result table */
+.result-table {
+    position: relative;
+    left: 52vw;
+    bottom: 21vw;
+}
+
+.result-table h2 {
+    margin-left: 7vw;
+    margin-bottom: 1vw;
+    font-weight: bold;
+    font-size: 2vw;
+}
+
+.cell {
+    width: 15vw;
+    text-align: center;
+}

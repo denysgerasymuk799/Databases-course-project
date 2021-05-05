@@ -20,7 +20,11 @@
         <select class="select" name="agronom_id" id="" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
             {% for id, name in agronom_lst %}
-            <option value="{{ id }}">{{ name }}</option>
+                {% if selected_agr_id == id %}
+                    <option value="{{ id }}" selected>{{ name }}</option>
+                {% else %}
+                    <option value="{{ id }}">{{ name }}</option>
+                {% endif %}
             {% endfor %}
         </select>
 
@@ -28,85 +32,62 @@
 
         <select class="select" name="sold_times" id="1" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
-            {% for i in range(1, 11) %}
-            {% if i == 1 %}
-            <option value="{{ i }}" selected>{{ i }}</option>
-            {% endif %}
-
-            <option value="{{ i }}">{{ i }}</option>
+            {% for i in range(0, 11) %}
+                {% if i == sold_times %}
+                    <option value="{{ i }}" selected>{{ i }}</option>
+                {% else %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endif %}
             {% endfor %}
         </select>
 
         <h1> times for dates: from </h1>
-        <input class="select" type="date" name="from_date" class="date-picker">
+        {% if selected_from_date == "-" %}
+            <input class="select" type="date" name="from_date" class="date-picker">
+        {% else %}
+            <input class="select" type="date" name="from_date" class="date-picker" value="{{ selected_from_date }}">
+        {% endif %}
 
         <h1> to </h1>
-        <input class="select" type="date" name="to_date" class="date-picker">
+        {% if selected_to_date == "-" %}
+            <input class="select" type="date" name="to_date" class="date-picker">
+        {% else %}
+            <input class="select" type="date" name="to_date" class="date-picker" value="{{ selected_to_date }}">
+        {% endif %}
 
         <div class="btn-container">
             <input class="submit-btn" type="submit" name="submit_button" value="Submit">
         </div>
 
-        <table class="result-table" cellspacing="0" cellpadding="0" border="0" width="325">
-            <tr>
-                <td>
-                    <table cellspacing="0" cellpadding="1" border="1" width="300">
-                        <tr style="color:white;background-color:grey">
-                            <th>Header 1</th>
-                            <th>Header 2</th>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div style="width:320px; height:160px; overflow:auto;">
+        <div class="result-table">
+            <h2>Result</h2>
+            <table cellspacing="0" cellpadding="0" border="0" width="325">
+                <tr>
+                    <td>
                         <table cellspacing="0" cellpadding="1" border="1" width="300">
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
-                            </tr>
-                            <tr>
-                                <td>new item</td>
-                                <td>new item</td>
+                            <tr style="color:white;background-color:grey">
+                                <th class="cell">{{ table_cols[0] }}</th>
+                                <th class="cell">{{ table_cols[1] }}</th>
                             </tr>
                         </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="width:320px; height:160px; overflow:auto;">
+                            <table cellspacing="0" cellpadding="1" border="1" width="300">
+                                {% for id, name in customers %}
+                                    <tr>
+                                        <td class="cell">{{ id }}</td>
+                                        <td class="cell">{{ name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </form>
 </div>
 

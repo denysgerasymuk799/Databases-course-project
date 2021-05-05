@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 from datetime import date
 
 from init_config import db, app
-from models import Customer
+from models import Customer, Agronomist
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -13,14 +13,22 @@ def get_main_page():
 
 @app.route('/request1', methods=['GET', 'POST'])
 def request_page_action1():
+    statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
+
+    agronomists_list = db.session.execute(statement).all()
+    db.session.commit()
+    db.session.close()
+
+    table_cols = ["customer_id", "customer_name"]
     if request.method == 'GET':
-        statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
-
-        agronomists_list = db.session.execute(statement).all()
-        db.session.commit()
-        db.session.close()
-
-        return render_template("request1.html", agronom_lst=agronomists_list)
+        return render_template("request1.html",
+                               agronom_lst=agronomists_list,
+                               selected_agr_id=1,
+                               selected_from_date="-",
+                               selected_to_date="-",
+                               sold_times=1,
+                               table_cols=table_cols,
+                               customers=[(0, "No result")])
 
     if request.method == 'POST':
         # Get a data in json format(similar)
@@ -33,7 +41,6 @@ def request_page_action1():
 
         today = date.today()
         if data["from_date"] == '':
-            # data["from_date"] = today.strftime("%Y-%m-%d")
             data["from_date"] = '2013-01-01'
 
         if data["to_date"] == '':
@@ -43,13 +50,15 @@ def request_page_action1():
 
         statement = text(
             """
-            SELECT customer_id FROM 
-                (SELECT customer_id, COUNT(*) AS num FROM ordering WHERE agronomist_id = :agronom_id 
-                    AND order_date BETWEEN :from_date AND :to_date GROUP BY customer_id)  AS foo
-                WHERE num >= :sold_times;
+            SELECT customer_id, customer_name FROM Customer WHERE customer_id IN 
+                (SELECT customer_id FROM
+                (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = :agronom_id
+                    AND order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h 
+                WHERE h.num > :sold_times);
             """
         )
 
+        # agronomist_id = Agronomist.query.filter_by(agronomist_name=data["agronom_id"]).first().agronomist_id
         rs = db.session.execute(statement, {
             "agronom_id": data["agronom_id"],
             "sold_times": data["sold_times"],
@@ -61,44 +70,80 @@ def request_page_action1():
 
         results = rs.fetchall()
         print("request1_handle -- ", results)
-        customer_names = []
-        for customer_id in results:
-            print("type(customer_id) -- ", type(customer_id[0]))
-            customer_names.append(Customer.query.filter_by(customer_id=customer_id[0]).first().customer_name)
 
-        print("customer_names -- ", customer_names)
-        return 'Hello1'
+        return render_template("request1.html",
+                               agronom_lst=agronomists_list,
+                               selected_agr_id=data["agronom_id"],
+                               selected_from_date=data["from_date"],
+                               selected_to_date=data["to_date"],
+                               sold_times=data["sold_times"],
+                               table_cols=table_cols,
+                               customers=results)
 
 
 @app.route('/request2', methods=['GET', 'POST'])
 def request_page_action2():
     statement = text("""SELECT customer_id, customer_name FROM customer""")
 
-    rs = db.session.execute(statement).all()
+    customer_values_sample = db.session.execute(statement).all()
     db.session.commit()
     db.session.close()
 
-    print("request_page_action2", rs)
-    customer_values_sample = [(1, "Lima"), (3, "Huka")]
+    print("request_page_action2", customer_values_sample)
 
-    return render_template("request2.html", customer_lst=customer_values_sample)
+    table_cols = ["product_id", "product_name"]
+    if request.method == 'GET':
+        return render_template("request2.html",
+                               customer_lst=customer_values_sample,
+                               selected_cust_id=1,
+                               selected_from_date="-",
+                               selected_to_date="-",
+                               table_cols=table_cols,
+                               customers=[(0, "No result")])
 
+    if request.method == 'POST':
+        # Get a data in json format(similar)
+        data = {
+            "cust_id": int(request.form.get("cust_id")),
+            "from_date": request.form.get("from_date"),
+            "to_date": request.form.get("to_date")
+        }
 
-@app.route('/request2_handled', methods=['POST'])
-def request2_handle():
-    # Get a data in json format(similar)
-    data = request.form
+        today = date.today()
+        if data["from_date"] == '':
+            data["from_date"] = '2013-01-01'
 
-    statement = text("""SELECT DISTINCT product_id FROM ordering WHERE customer_id = 
-    :cus_id AND order_date BETWEEN :date_start AND :date_end;""")
+        if data["to_date"] == '':
+            data["to_date"] = today.strftime("%Y-%m-%d")
 
-    rs = db.session.execute(statement, **data).all()
-    db.session.commit()
-    db.session.close()
+        print("data in request1_handle -- ", data)
 
-    print("request2_handle -- ", rs)
-    # TODO print all products
-    return 'Hello2'
+        statement = text(
+            """
+            SELECT product_name FROM Product WHERE product_id IN
+             (SELECT DISTINCT product_id FROM Ordering 
+               WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date);
+            """
+        )
+
+        rs = db.session.execute(statement, {
+            "cust_id": data["cust_id"],
+            "from_date": data["from_date"],
+            "to_date": data["to_date"]
+        })
+        db.session.commit()
+        db.session.close()
+
+        results = rs.fetchall()
+        print("request1_handle -- ", results)
+
+        return render_template("request2.html",
+                               customer_lst=customer_values_sample,
+                               selected_cust_id=data["cust_id"],
+                               selected_from_date=data["from_date"],
+                               selected_to_date=data["to_date"],
+                               table_cols=table_cols,
+                               customers=results)
 
 
 @app.route('/request3', methods=['GET', 'POST'])
