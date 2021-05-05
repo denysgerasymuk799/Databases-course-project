@@ -16,22 +16,17 @@
 <div class="wrapper">
     <h1>For agronomist </h1>
 
-    <select class="select" name="" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+<!--    <form action="{{ url_for('request1_handle') }}" method="post">-->
+    <select class="select" name="ag_id" id="" onfocus='this.size=5;' onblur='this.size=1;'
             onchange='this.size=1; this.blur();'>
-        <option value="">Name</option>
-        <option value="">Jack</option>
-        <option value="">Three</option>
-        <option value="">Four</option>
-        <option value="">Five</option>
-        <option value="">Six</option>
-        <option value="">Seven</option>
-        <option value="">Eight</option>
-        <option value="">Nine</option>
-        <option value="">Ten</option>
+        {% for id, name in agronom_lst %}
+            <option value="{{ id }}">{{ name }}</option>
+        {% endfor %}
     </select>
 
-        <h1> find all customers that he sold them products </h1>
-    <select class="select" name="" id="1" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+    <h1> find all customers that he sold them products </h1>
+
+    <select class="select" name="" id="1" onfocus='this.size=5;' onblur='this.size=1;'
             onchange='this.size=1; this.blur();'>
         <option value="">Number</option>
         <option value="">2</option>
