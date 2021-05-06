@@ -21,6 +21,7 @@ body {
 .wrapper-2 {
     padding: 30% 60px;
     line-height: normal;
+    margin-top: -5vw;
 }
 
 .wrapper-3 {
@@ -72,7 +73,7 @@ body {
     height: 3vw;
 
     padding: 0.35em 1.2em;
-    border: 0.1em solid #02741e;
+    border: 0.1em solid #3E9996;
     margin: 0 0.3em 0.3em 0;
     border-radius: 1em;
     box-sizing: border-box;
@@ -81,7 +82,7 @@ body {
     font-weight: bold;
     font-size: 1vw;
     color: white;
-    background-color: #02741e;
+    background-color: #3E9996;
     text-align: center;
     transition: all 0.2s;
 }
@@ -110,6 +111,11 @@ body {
     margin-bottom: 1vw;
     font-weight: bold;
     font-size: 2vw;
+}
+
+.result-table2 {
+    position: relative;
+    margin-top: -18vw;
 }
 
 .cell {

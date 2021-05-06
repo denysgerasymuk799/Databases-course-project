@@ -99,7 +99,7 @@ def request_page_action2():
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
-                               customers=[(0, "No result")])
+                               products=[(0, "No result")])
 
     if request.method == 'POST':
         # Get a data in json format(similar)
@@ -111,16 +111,16 @@ def request_page_action2():
 
         today = date.today()
         if data["from_date"] == '':
-            data["from_date"] = '2013-01-01'
+            data["from_date"] = '2010-01-01'
 
         if data["to_date"] == '':
             data["to_date"] = today.strftime("%Y-%m-%d")
 
-        print("data in request1_handle -- ", data)
+        print("data in request2_handle -- ", data)
 
         statement = text(
             """
-            SELECT product_name FROM Product WHERE product_id IN
+            SELECT product_id, product_name FROM Product WHERE product_id IN
              (SELECT DISTINCT product_id FROM Ordering 
                WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date);
             """
@@ -135,7 +135,7 @@ def request_page_action2():
         db.session.close()
 
         results = rs.fetchall()
-        print("request1_handle -- ", results)
+        print("request2_handle results -- ", results)
 
         return render_template("request2.html",
                                customer_lst=customer_values_sample,
@@ -143,7 +143,7 @@ def request_page_action2():
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,
-                               customers=results)
+                               products=results)
 
 
 @app.route('/request3', methods=['GET', 'POST'])
