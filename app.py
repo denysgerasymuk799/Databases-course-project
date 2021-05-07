@@ -58,7 +58,6 @@ def request_page_action1():
             """
         )
 
-        # agronomist_id = Agronomist.query.filter_by(agronomist_name=data["agronom_id"]).first().agronomist_id
         rs = db.session.execute(statement, {
             "agronom_id": data["agronom_id"],
             "sold_times": data["sold_times"],
