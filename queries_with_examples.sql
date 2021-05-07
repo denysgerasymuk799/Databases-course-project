@@ -1,6 +1,3 @@
-SELECT * FROM customer
-SELECT * FROM ordering
-
 -- 1 Для агронома A знайти усiх споживачiв, яким вiн продавав продукт хоча б N разiв
 -- за вказаний перiод (з дати F по дату T)
 SELECT customer_name FROM Customer WHERE customer_id IN 
@@ -25,15 +22,11 @@ SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN
 	(SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
 	Degustation INNER JOIN Degustation_Customer ON 
 	Degustation.degustation_id = Degustation_Customer.degustation_id 
-	WHERE Degustation_Customer.customer_id = 5 GROUP BY agronomist_id) h
- WHERE h.num > 1);
+	WHERE Degustation_Customer.customer_id = 5 AND degustation_date BETWEEN '2000-01-01' AND '2021-01-01' GROUP BY agronomist_id) h
+ WHERE h.num > 0);
 
 --4 Для агронома А знайти усiх агрономiв, з якими вiн їздив у вiдрядження протягом
 -- вказаного перiоду (з дати F по дату T)
-SELECT * FROM  Trip_Agronomist
-SELECT * FROM  business_trip
-SELECT * FROM  Agronomist
-
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
 (SELECT DISTINCT agronomist_id FROM Trip_Agronomist WHERE agronomist_id != 2 AND trip_id IN
 (SELECT trip_id FROM business_trip WHERE trip_date BETWEEN '2000-01-01' AND '2021-01-01' AND trip_id IN 
@@ -43,11 +36,11 @@ SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN
 -- хоча б одну дегустацiю протягом вказаного перiоду (з дати F по дату T)
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
 	(SELECT agronomist_id FROM Ordering
-	 WHERE customer_id = 5 AND order_date BETWEEN '2010-01-01' AND '2021-01-01')
+	 WHERE customer_id = 1 AND order_date BETWEEN '2000-01-01' AND '2021-01-01')
 AND agronomist_id IN
 	(SELECT agronomist_id FROM Degustation WHERE degustation_id IN 
-	(SELECT * FROM degustation_customer WHERE customer_id = 5)
- 	AND degustation_date BETWEEN '2010-01-01' AND '2021-01-01');
+	(SELECT degustation_id FROM degustation_customer WHERE customer_id = 1)
+ 	AND degustation_date BETWEEN '2000-01-01' AND '2021-01-01');
 
 --6 Знайти усiх споживачiв, якi купили щонайменше N рiзних продуктiв за вказаний перiод
 -- (з дати F по дату T)
@@ -60,25 +53,26 @@ SELECT customer_name FROM Customer WHERE customer_id IN
 --7 Знайти усiх агрономiв, якi збирали урожай хоча б N рiзних сортiв коноплi
 -- за вказаний перiод (з дати F по дату T)
  SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN (
- SELECT * FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest
+ SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest
 				WHERE harvest_date BETWEEN '2010-01-01' AND '2021-01-01' GROUP BY agronomist_id) h
- WHERE h.num > 2);
+ WHERE h.num > 0);
  
  --8 Знайти усi спiльнi дегустацiї для споживача С та агронома А
  -- за вказаний перiод (з дати F по дату T)
 SELECT DISTINCT Degustation.degustation_id FROM Degustation
 INNER JOIN Degustation_Customer
 ON Degustation.degustation_id = Degustation_Customer.degustation_id 
-WHERE Degustation_Customer.customer_id = "C" AND Degustation.agronomist_id = "A";
+WHERE Degustation_Customer.customer_id = 5 AND Degustation.agronomist_id = 1
+AND Degustation.degustation_date BETWEEN '2009-01-01' AND '2021-01-01';
 
 --9 Для агронома A та кожного продукту, дегустацiю якого вiн проводив, знайти скiльки разiв
 -- за вказаний перiод (з дати F по дату T) вiн проводив дегустацiю для щонайменше N споживачiв
 SELECT product_id, COUNT(product_id) FROM Degustation WHERE degustation_id IN (
-SELECT * FROM (SELECT Degustation.degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
+SELECT degustation_id FROM (SELECT Degustation.degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
 INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id  
 WHERE degustation_date BETWEEN '2000-01-01' AND '2021-01-01'
-AND agronomist_id = 1 GROUP BY degustation_id) h WHERE h.num > 1) GROUP BY product_id;
+AND agronomist_id = 1 GROUP BY Degustation.degustation_id) h WHERE h.num > 0) GROUP BY product_id;
 
 --10 Для споживача С знайти сумарну кiлькiсть вiдгукiв по мiсяцях, якi вiн залишив за вказаний перiод
 -- (з дати F по дату T)
