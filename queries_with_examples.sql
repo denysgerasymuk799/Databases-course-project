@@ -93,18 +93,17 @@ CREATE OR REPLACE VIEW hrvsts AS (SELECT sort_name, f.agronomist_name, harvest_d
     END
     FROM (
     SELECT * FROM (sort s INNER JOIN harvest h ON s.sort_id = h.sort_id) d INNER JOIN agronomist a ON d.agronomist_id = a.agronomist_id 
-WHERE harvest_date BETWEEN '2010-01-01' AND '2021-01-01' ) f 
+WHERE harvest_date BETWEEN '2000-01-01' AND '2020-01-01' ) f 
     LEFT JOIN 
         (SELECT agronomist_name, COUNT(agronomist_name) trips FROM agronomist a 
      INNER JOIN trip_agronomist ta on a.agronomist_id = ta.agronomist_id GROUP BY agronomist_name) g 
-     on f.agronomist_name = g.agronomist_name )
+     on f.agronomist_name = g.agronomist_name );
 
 SELECT sort_name, CASE
     WHEN sort_name IN 
         (SELECT sort_name FROM hrvsts
          group by (sort_name, agronomist_name)
-         having count(agronomist_name) > 1)
-		 THEN SUM(trips)/COUNT(agronomist_name)
+         having count(agronomist_name) >= 1) THEN ROUND(SUM(trips)/COUNT(agronomist_name), 1)
   ELSE 0
   END AS av_trips
 FROM hrvsts 
@@ -113,7 +112,7 @@ ORDER BY av_trips DESC
 
 --12 Вивести продукти, якi були придбанi щонайменше N рiзними споживачами у порядку
 -- спадання вiдсотку повернень за вказаний перiод (з дати F по дату T)
-SELECT product_name, CAST(returned AS DECIMAL)/bought * 100 perc FROM
+SELECT product_name, ROUND(CAST(returned AS DECIMAL)/bought * 100, 2) perc FROM
 (SELECT d.product_name, bought, CASE 
    WHEN returned IS NULL THEN 0
    ELSE returned
@@ -122,7 +121,7 @@ FROM
 (SELECT product_name, COUNT(product_name) bought FROM ORDERING o INNER JOIN product p ON o.product_id = p.product_id
 GROUP BY product_name) d LEFT JOIN
 (SELECT product_name, COUNT(product_name) returned FROM (ORDERING o INNER JOIN product p ON o.product_id = p.product_id) f
-RIGHT JOIN order_return orr ON f.order_id = orr.order_id WHERE return_date BETWEEN '2010-01-01' AND '2021-01-01'
+RIGHT JOIN order_return orr ON f.order_id = orr.order_id WHERE return_date BETWEEN '01/01/2000' AND '01/01/2020'
 GROUP BY product_name) g on d.product_name = g.product_name
-WHERE bought > 1) h
+WHERE bought >= 2) h
 ORDER BY perc DESC

@@ -1,27 +1,27 @@
--- 1 Works
+-- 1 
 SELECT customer_name FROM Customer WHERE customer_id IN 
 (SELECT customer_id FROM
 (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = "A" 
 	AND order_date BETWEEN 'F' AND 'T' GROUP BY customer_id) h 
 WHERE h.num > "N");
 
---2 Works
+--2 
 SELECT product_name FROM Product WHERE product_id IN (SELECT DISTINCT product_id FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN 'F' AND 'T');
 
---3 Works
+--3 
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN
 (SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
 Degustation INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id 
 WHERE Degustation_Customer.customer_id = "C" GROUP BY agronomist_id) h WHERE h.num > "N");
 
---4 Works
+--4 
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
 (SELECT DISTINCT agronomist_id FROM Trip_Agronomist WHERE agronomist_id != "A" AND trip_id IN
 (SELECT trip_id FROM business_trip WHERE trip_date BETWEEN "F" AND "T" AND trip_id IN 
 (SELECT trip_id FROM Trip_Agronomist WHERE agronomist_id = "A")));
  
---5 Works
+--5 
 SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
 (SELECT agronomist_id FROM Ordering WHERE customer_id = "C" AND order_date BETWEEN "F" AND "T" )
 AND agronomist_id IN
@@ -29,7 +29,7 @@ AND agronomist_id IN
 (SELECT * FROM degustation_customer WHERE customer_id = "C")
  AND degustation_date BETWEEN "F" AND "T");
 
---6 Works
+--6 
 SELECT customer_name FROM Customer WHERE customer_id IN
 (SELECT customer_id FROM 
  (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering WHERE order_date BETWEEN "F" AND "T" GROUP BY customer_id) h
