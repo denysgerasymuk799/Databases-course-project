@@ -768,25 +768,9 @@ INSERT INTO trip_agronomist VALUES
     (3, 1),
     (10, 5)
 ;
-
 -- Creating indexes
-CREATE
-INDEX idx_agronom_name ON agronomist (agronomist_name);
-CREATE
-INDEX idx_agronom_id ON agronomist (agronomist_id);
-
-CREATE
-INDEX idx_customer_name ON customer (customer_name);
-CREATE
-INDEX idx_customer_id ON customer (customer_id);
-
-CREATE
-INDEX idx_product_id ON ordering (product_id);
-CREATE
-INDEX idx_order_id ON ordering (order_id);
-
--- Multiple index on product_ids
-CREATE
-INDEX idx_product_agronomist_id ON ordering (product_id, agronomist_id);
-CREATE
-INDEX idx_product_customer_id ON ordering (product_id, customer_id);
+CREATE INDEX idx_agronom_name ON agronomist (agronomist_name);
+CREATE INDEX idx_customer_name ON customer (customer_name);
+CREATE INDEX idx_sort_name ON sort (sort_name);
+CREATE INDEX idx_weight_ord ON ordering (weight);
+CREATE INDEX idx_total_proce_ord ON ordering (total_price);
