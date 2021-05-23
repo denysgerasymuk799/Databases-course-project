@@ -118,6 +118,19 @@ body {
     margin-top: -18vw;
 }
 
+.result-table3 {
+    position: relative;
+    margin-top: -32vw;
+    margin-left: -35vw;
+}
+
+.result-table3 h2 {
+    margin-left: 7vw;
+    margin-bottom: 1vw;
+    font-weight: bold;
+    font-size: 2vw;
+}
+
 .cell {
     width: 15vw;
     text-align: center;

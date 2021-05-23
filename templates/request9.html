@@ -28,7 +28,7 @@
             {% endfor %}
         </select>
 
-        <h1> and all his product find how many times he conducted a tasting for at least number of customers:</h1>
+        <h1> and all his product find how many times he conducted a degustation for at least number of customers:</h1>
             <input type="number" min="1" name="n_times" class="N-picker">
 
         <h1> times for dates: from </h1>
@@ -58,6 +58,7 @@
                             <tr style="color:white;background-color:grey">
                                 <th class="cell">{{ table_cols[0] }}</th>
                                 <th class="cell">{{ table_cols[1] }}</th>
+                                <th class="cell">{{ table_cols[2] }}</th>
                             </tr>
                         </table>
                     </td>
@@ -66,9 +67,10 @@
                     <td>
                         <div style="width:320px; height:160px; overflow:auto;">
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
-                                {% for id, number_times in result %}
+                                {% for id, name, number_times in result %}
                                     <tr>
                                         <td class="cell">{{ id }}</td>
+                                        <td class="cell">{{ name }}</td>
                                         <td class="cell">{{ number_times }}</td>
                                     </tr>
                                 {% endfor %}

@@ -27,6 +27,7 @@ class Product(db.Model):
 
 
 class Sort_Product(db.Model):
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
     sort_id = db.Column(db.Integer, db.ForeignKey('sort.sort_id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False)
 
@@ -53,6 +54,7 @@ class Customer(db.Model):
 
 
 class Degustation_Customer(db.Model):
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
     degustation_id = db.Column(db.Integer, db.ForeignKey('degustation.degustation_id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.customer_id'), nullable=False)
 
@@ -111,6 +113,7 @@ class Trip(db.Model):
 
 
 class Trip_Agronomist(db.Model):
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
     agronomist_id = db.Column(db.Integer, db.ForeignKey('agronomist.agronomist_id'), nullable=False)
     trip_id = db.Column(db.Integer, db.ForeignKey('trip.trip_id'), nullable=False)
 

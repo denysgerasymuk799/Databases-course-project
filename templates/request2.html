@@ -54,7 +54,6 @@
                         <table cellspacing="0" cellpadding="1" border="1" width="300">
                             <tr style="color:white;background-color:grey">
                                 <th class="cell">{{ table_cols[0] }}</th>
-                                <th class="cell">{{ table_cols[1] }}</th>
                             </tr>
                         </table>
                     </td>
@@ -65,7 +64,7 @@
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
                                 {% for name in products %}
                                 <tr>
-                                    <td class="cell">{{ name }}</td>
+                                    <td class="cell">{{ name[0] }}</td>
                                 </tr>
                                 {% endfor %}
                             </table>
