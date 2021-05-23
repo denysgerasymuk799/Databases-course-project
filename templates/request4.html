@@ -63,9 +63,8 @@
                     <td>
                         <div style="width:320px; height:160px; overflow:auto;">
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
-                                {% for id, name in agronomists %}
+                                {% for name in agronomists %}
                                 <tr>
-                                    <td class="cell">{{ id }}</td>
                                     <td class="cell">{{ name }}</td>
                                 </tr>
                                 {% endfor %}

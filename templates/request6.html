@@ -17,16 +17,7 @@
     <h1>Find all customers that bought at least</h1>
 
     <form action="{{ url_for('request_page_action6') }}" method="post">
-        <select class="select" name="products_num" id="1" onfocus='this.size=5;' onblur='this.size=1;'
-                onchange='this.size=1; this.blur();'>
-            {% for i in range(0, 11) %}
-                {% if i == products_num %}
-                    <option value="{{ i }}" selected>{{ i }}</option>
-                {% else %}
-                    <option value="{{ i }}">{{ i }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+        <input type="number" min="1" name="n_times" class="N-picker">
 
         <h1>different products</h1>
 
@@ -67,9 +58,8 @@
                     <td>
                         <div style="width:320px; height:160px; overflow:auto;">
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
-                                {% for id, name in customers %}
+                                {% for name in customers %}
                                     <tr>
-                                        <td class="cell">{{ id }}</td>
                                         <td class="cell">{{ name }}</td>
                                     </tr>
                                 {% endfor %}
