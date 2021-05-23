@@ -19,7 +19,7 @@ def request_page_action1():
     db.session.commit()
     db.session.close()
 
-    table_cols = ["customer_id", "customer_name"]
+    table_cols = ["customer_name"]
     if request.method == 'GET':
         return render_template("request1.html",
                                agronomists_lst=agronomists_list,
@@ -49,11 +49,11 @@ def request_page_action1():
 
         statement = text(
             """
-            SELECT customer_id, customer_name FROM Customer WHERE customer_id IN 
-                (SELECT customer_id FROM
-                (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = :agronomist_id
-                    AND order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h 
-                WHERE h.num > :n_times);
+            SELECT customer_name FROM Customer WHERE customer_id IN 
+(SELECT customer_id FROM
+(SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = :agronomist_id
+	AND order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h 
+WHERE h.num > :n_times);
             """
         )
 
@@ -88,7 +88,7 @@ def request_page_action2():
 
     print("request_page_action2", customer_values_sample)
 
-    table_cols = ["product_id", "product_name"]
+    table_cols = ["product_name"]
     if request.method == 'GET':
         return render_template("request2.html",
                                customer_lst=customer_values_sample,
@@ -117,7 +117,7 @@ def request_page_action2():
 
         statement = text(
             """
-            SELECT product_id, product_name FROM Product WHERE product_id IN
+            SELECT product_name FROM Product WHERE product_id IN
              (SELECT DISTINCT product_id FROM Ordering 
                WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date);
             """
@@ -184,11 +184,11 @@ def request_page_action3():
         statement = text(
             """
             SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN
-(SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
-Degustation INNER JOIN Degustation_Customer ON 
-Degustation.degustation_id = Degustation_Customer.degustation_id 
-WHERE Degustation_Customer.customer_id = :cust_id GROUP BY agronomist_id) h WHERE h.num > :n_times
-AND order_date BETWEEN :from_date AND :to_date);
+	(SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
+	Degustation INNER JOIN Degustation_Customer ON 
+	Degustation.degustation_id = Degustation_Customer.degustation_id 
+	WHERE Degustation_Customer.customer_id = :cust_id AND degustation_date BETWEEN :from_date AND :to_date GROUP BY agronomist_id) h
+ WHERE h.num >= :n_times);
             """
         )
 
@@ -321,11 +321,12 @@ def request_page_action5():
         statement = text(
             """
             SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN 
-(SELECT agronomist_id FROM Ordering WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date )
+	(SELECT agronomist_id FROM Ordering
+	 WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date)
 AND agronomist_id IN
-(SELECT agronomist_id FROM Degustation WHERE degustation_id IN 
-(SELECT * FROM degustation_customer WHERE customer_id = :cust_id)
- AND degustation_date BETWEEN :from_date AND :to_date);
+	(SELECT agronomist_id FROM Degustation WHERE degustation_id IN 
+	(SELECT degustation_id FROM degustation_customer WHERE customer_id = :cust_id)
+ 	AND degustation_date BETWEEN :from_date AND :to_date);
             """
         )
 
@@ -382,7 +383,8 @@ def request_page_action6():
             """
             SELECT customer_name FROM Customer WHERE customer_id IN
 (SELECT customer_id FROM 
- (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering WHERE order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h
+ (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering INNER JOIN Ordering_Product ON Ordering.order_id = Ordering_Product.order_id 
+  WHERE order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h
  WHERE h.num > :n_times);
             """
         )
@@ -445,7 +447,8 @@ def request_page_action7():
         statement = text(
             """
              SELECT agronomist_name FROM Agronomist WHERE agronomist_id IN (
- SELECT * FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest WHERE harvest_date BETWEEN :from_date AND :to_date GROUP BY agronomist_id) h
+ SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(sort_id) AS num FROM Harvest
+				WHERE harvest_date BETWEEN :from_date AND :to_date GROUP BY agronomist_id) h
  WHERE h.num > :n_times);
             """
         )
@@ -512,9 +515,11 @@ def request_page_action8():
 
         statement = text(
             """
-             SELECT DISTINCT Degustation.degustation_id FROM Degustation INNER JOIN Degustation_Customer ON 
-Degustation.degustation_id = Degustation_Customer.degustation_id 
-WHERE Degustation_Customer.customer_id = :cust_id AND Degustation.agronomist_id = :agronomist_id;
+            SELECT DISTINCT Degustation.degustation_id FROM Degustation
+INNER JOIN Degustation_Customer
+ON Degustation.degustation_id = Degustation_Customer.degustation_id 
+WHERE Degustation_Customer.customer_id = :cust_id AND Degustation.agronomist_id = :agronomist_id
+AND Degustation.degustation_date BETWEEN :from_date AND :to_date;
             """
         )
 
@@ -582,10 +587,11 @@ def request_page_action9():
         statement = text(
             """
             SELECT product_id, COUNT(product_id) FROM Degustation WHERE degustation_id IN (
-SELECT * FROM (SELECT Degustation.degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
+SELECT degustation_id FROM (SELECT Degustation.degustation_id, COUNT(DISTINCT Degustation_Customer.customer_id) AS num FROM Degustation 
 INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id  
-WHERE degustation_date BETWEEN :from_date AND :to_date AND agronomist_id = :agronomist_id GROUP BY degustation_id) h WHERE h.num > :n_times) GROUP BY product_id;
+WHERE degustation_date BETWEEN :from_date AND :to_date
+AND agronomist_id = :agronomist_id GROUP BY Degustation.degustation_id) h WHERE h.num > :n_times) GROUP BY product_id;
             """
         )
 
@@ -621,7 +627,7 @@ def request_page_action10():
 
     print("request_page_action10", customer_values_sample)
 
-    table_cols = ["product_id", "product_name"]
+    table_cols = ["month", "number_times"]
     if request.method == 'GET':
         return render_template("request10.html",
                                customer_lst=customer_values_sample,
@@ -650,7 +656,10 @@ def request_page_action10():
 
         statement = text(
             """
-            --10 Not done
+            SELECT EXTRACT(YEAR FROM return_date) AS years, EXTRACT (MONTH FROM return_date) AS months, COUNT(return_id) AS TOTALCOUNT 
+FROM Order_Return WHERE return_date BETWEEN :from_date AND :to_date
+GROUP BY years, months
+ORDER BY years, months;
             """
         )
 
@@ -717,13 +726,14 @@ WHERE harvest_date BETWEEN :from_date AND :to_date ) f
     LEFT JOIN 
         (SELECT agronomist_name, COUNT(agronomist_name) trips FROM agronomist a 
      INNER JOIN trip_agronomist ta on a.agronomist_id = ta.agronomist_id GROUP BY agronomist_name) g 
-     on f.agronomist_name = g.agronomist_name )
+     on f.agronomist_name = g.agronomist_name );
 
 SELECT sort_name, CASE
     WHEN sort_name IN 
         (SELECT sort_name FROM hrvsts
          group by (sort_name, agronomist_name)
-         having count(agronomist_name) > :n_times) THEN SUM(trips)/COUNT(agronomist_name)
+         having count(agronomist_name) > :n_times)
+		 THEN SUM(trips)/COUNT(agronomist_name)
   ELSE 0
   END AS av_trips
 FROM hrvsts 
@@ -782,18 +792,20 @@ def request_page_action12():
 
         statement = text(
             """
-            SELECT product_name, CAST(returned AS DECIMAL)/bought * 100 perc FROM
+            SELECT product_name, ROUND(CAST(returned AS DECIMAL)/bought * 100, 2) perc FROM
 (SELECT d.product_name, bought, CASE 
    WHEN returned IS NULL THEN 0
    ELSE returned
    END AS returned
 FROM 
-(SELECT product_name, COUNT(product_name) bought FROM ORDERING o INNER JOIN product p ON o.product_id = p.product_id
+(SELECT product_name, COUNT(product_name) bought FROM (ordering o LEFT JOIN ordering_product op ON o.order_id = op.order_id) f 
+LEFT JOIN product p ON f.product_id = p.product_id
 GROUP BY product_name) d LEFT JOIN
-(SELECT product_name, COUNT(product_name) returned FROM (ORDERING o INNER JOIN product p ON o.product_id = p.product_id) f
-RIGHT JOIN order_return orr ON f.order_id = orr.order_id WHERE return_date BETWEEN :from_date AND :to_date
+(SELECT product_name, COUNT(product_name) returned FROM ((SELECT op.order_id, product_id FROM ordering o LEFT JOIN ordering_product op ON o.order_id = op.order_id) f 
+LEFT JOIN product p ON f.product_id = p.product_id) n RIGHT JOIN order_return orr ON n.order_id = orr.order_id  
+WHERE return_date BETWEEN :from_date AND :to_date
 GROUP BY product_name) g on d.product_name = g.product_name
-WHERE bought > :n_times) h
+WHERE bought >= :n_times) h
 ORDER BY perc DESC
             """
         )
