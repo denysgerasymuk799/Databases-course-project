@@ -139,3 +139,38 @@ body {
 .number-picker {
     font-size: 1.2vw;
 }
+
+.button-back {
+    width: 150px;
+    height: 40px;
+    background-color: darkblue;
+    position: relative;
+    margin-left: 40px;
+    border-radius: 5px;
+}
+
+.button-back:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -17px;
+    border-style: solid;
+    border-width: 20px 20px 20px 0;
+    border-color: transparent darkblue transparent transparent;
+}
+
+.button-back > a {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    font: bold 18px/40px Sans-Serif;
+}
+
+.button-back:hover {
+    background-color: lightblue;
+}
+
+.button-back:hover:before {
+    border-right-color: lightblue;
+}
