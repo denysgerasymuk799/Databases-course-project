@@ -1,15 +1,16 @@
 -- 1 Для агронома A знайти усiх споживачiв, яким вiн продавав продукт хоча б N разiв
 -- за вказаний перiод (з дати F по дату T)
-SELECT customer_name FROM Customer WHERE customer_id IN 
+SELECT customer_name FROM Customer WHERE customer_id IN
 (SELECT customer_id FROM
 (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = 1
 	AND order_date BETWEEN '2010-01-01' AND '2021-01-01' GROUP BY customer_id) h 
 WHERE h.num >= 0);
 
 --2 Для споживача С знайти усi продукти, якi вiн придбав за вказаний перiод (з дати F по дату T)
-SELECT product_name FROM Product WHERE product_id IN
-	(SELECT DISTINCT product_id FROM Ordering
-	 WHERE customer_id = 18 AND order_date BETWEEN '2000-01-01' AND '2021-01-01');
+SELECT product_name FROM Product WHERE product_id IN 
+(SELECT product_id FROM Ordering_Product WHERE order_id IN 
+ (SELECT DISTINCT order_id FROM Ordering
+   WHERE customer_id = 1 AND order_date BETWEEN '2000-01-01' AND '2021-01-01'));
 
 -- example of no such order
 SELECT product_name FROM Product WHERE product_id IN
@@ -76,10 +77,8 @@ AND agronomist_id = 1 GROUP BY Degustation.degustation_id) h WHERE h.num >= 0) G
 
 --10 Для споживача С знайти сумарну кiлькiсть вiдгукiв по мiсяцях, якi вiн залишив за вказаний перiод
 -- (з дати F по дату T)
-SELECT EXTRACT(YEAR FROM return_date) AS years, EXTRACT (MONTH FROM return_date) AS months, COUNT(return_id) AS TOTALCOUNT 
-FROM Order_Return WHERE return_date BETWEEN '2010-01-01' AND '2021-01-01' AND order_id IN (
-	SELECT order_id FROM Ordering WHERE customer_id = 7
-)
+SELECT EXTRACT(YEAR FROM review_date) AS years, EXTRACT (MONTH FROM review_date) AS months, COUNT(review_id) AS TOTALCOUNT 
+FROM Review WHERE review_date BETWEEN '2010-01-01' AND '2021-01-01'and customer_id = 3
 GROUP BY years, months
 ORDER BY years, months;
 
@@ -102,7 +101,7 @@ SELECT sort_name, CASE
     WHEN sort_name IN 
         (SELECT sort_name FROM hrvsts
          group by (sort_name, agronomist_name)
-         having count(agronomist_name) > 0)
+         having count(agronomist_name) >= 0)
 		 THEN SUM(trips)/COUNT(agronomist_name)
   ELSE 0
   END AS av_trips

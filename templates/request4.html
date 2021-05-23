@@ -27,7 +27,7 @@
             {% endfor %}
         </select>
 
-        <h1> find all agronomists that go on a business trip with him/her from: </h1>
+        <h1> find all agronomists that go on a business trip with him/her from </h1>
 
         {% if selected_from_date == "-" %}
         <input class="select" type="date" name="from_date" class="date-picker">
@@ -35,7 +35,7 @@
         <input class="select" type="date" name="from_date" class="date-picker" value="{{ selected_from_date }}">
         {% endif %}
 
-        <h1> to: </h1>
+        <h1> to </h1>
         {% if selected_to_date == "-" %}
         <input class="select" type="date" name="to_date" class="date-picker">
         {% else %}

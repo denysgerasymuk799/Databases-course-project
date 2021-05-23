@@ -24,6 +24,7 @@ def request_page_action1():
         return render_template("request1.html",
                                agronomists_lst=agronomists_list,
                                selected_agronomist_id=1,
+                               num_times=1,
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
@@ -78,6 +79,7 @@ def request_page_action1():
 
         return render_template("request1.html",
                                agronomists_lst=agronomists_list,
+                               num_times=data["n_times"],
                                selected_agronomist_id=data["agronomist_id"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
@@ -125,8 +127,9 @@ def request_page_action2():
         statement = text(
             """
             SELECT product_name FROM Product WHERE product_id IN
-             (SELECT DISTINCT product_id FROM Ordering 
-               WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date);
+            (SELECT product_id FROM Ordering_Product WHERE order_id IN 
+             (SELECT DISTINCT order_id FROM Ordering
+               WHERE customer_id = :cust_id AND order_date BETWEEN :from_date AND :to_date));
             """
         )
 
@@ -164,6 +167,7 @@ def request_page_action3():
     if request.method == 'GET':
         return render_template("request3.html",
                                customer_lst=customer_values_sample,
+                               num_times=1,
                                selected_cust_id=1,
                                selected_from_date="-",
                                selected_to_date="-",
@@ -220,6 +224,7 @@ def request_page_action3():
 
         return render_template("request3.html",
                                customer_lst=customer_values_sample,
+                               num_times=data["n_times"],
                                selected_cust_id=data["cust_id"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
@@ -370,6 +375,7 @@ def request_page_action6():
         return render_template("request6.html",
                                selected_from_date="-",
                                selected_to_date="-",
+                               num_times=1,
                                table_cols=table_cols,
                                customers=[("No result", 0)])
 
@@ -419,6 +425,7 @@ def request_page_action6():
         print("request6_handle -- ", results)
 
         return render_template("request6.html",
+                               num_times=data["n_times"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,
@@ -427,17 +434,10 @@ def request_page_action6():
 
 @app.route('/request7', methods=['GET', 'POST'])
 def request_page_action7():
-    statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
-
-    agronomists_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
-
     table_cols = ["agronomist_name"]
     if request.method == 'GET':
         return render_template("request7.html",
-                               agronomists_lst=agronomists_list,
-                               selected_agronomist_id=1,
+                               num_times=1,
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
@@ -453,7 +453,6 @@ def request_page_action7():
             n_times = 1
 
         data = {
-            "agronomist_id": int(request.form.get("agronomist_id")),
             "n_times": n_times,
             "from_date": request.form.get("from_date"),
             "to_date": request.form.get("to_date")
@@ -461,7 +460,7 @@ def request_page_action7():
 
         today = date.today()
         if data["from_date"] == '':
-            data["from_date"] = '2000-01-01'
+            data["from_date"] = '1999-01-01'
 
         if data["to_date"] == '':
             data["to_date"] = today.strftime("%Y-%m-%d")
@@ -489,8 +488,7 @@ def request_page_action7():
         print("request7_handle -- ", results)
 
         return render_template("request7.html",
-                               agronomists_lst=agronomists_list,
-                               selected_agronomist_id=data["agronomist_id"],
+                               num_times=data["n_times"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,
@@ -606,6 +604,7 @@ def request_page_action9():
     if request.method == 'GET':
         return render_template("request9.html",
                                agronomists_lst=agronomists_list,
+                               num_times=1,
                                selected_agronomist_id=1,
                                selected_from_date="-",
                                selected_to_date="-",
@@ -684,6 +683,7 @@ def request_page_action9():
 
         return render_template("request9.html",
                                agronomists_lst=agronomists_list,
+                               num_times=data["n_times"],
                                selected_agronomist_id=data["agronomist_id"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
@@ -701,7 +701,7 @@ def request_page_action10():
 
     print("request_page_action10", customer_values_sample)
 
-    table_cols = ["month", "number_times"]
+    table_cols = ["year", "month", "times"]
     if request.method == 'GET':
         return render_template("request10.html",
                                customer_lst=customer_values_sample,
@@ -709,7 +709,7 @@ def request_page_action10():
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
-                               result=[("No result", 0)])
+                               result=[("No result", "No result", 0)])
 
     if request.method == 'POST':
         # Get a data in json format(similar)
@@ -730,10 +730,8 @@ def request_page_action10():
 
         statement = text(
             """
-            SELECT EXTRACT(YEAR FROM return_date) AS years, EXTRACT (MONTH FROM return_date) AS months, COUNT(return_id) AS TOTALCOUNT 
-            FROM Order_Return WHERE return_date BETWEEN :from_date AND :to_date AND order_id IN (
-                SELECT order_id FROM Ordering WHERE customer_id = :cust_id
-            )
+            SELECT EXTRACT(YEAR FROM review_date) AS years, EXTRACT (MONTH FROM review_date) AS months, COUNT(review_id) AS TOTALCOUNT 
+            FROM Review WHERE review_date BETWEEN :from_date AND :to_date and customer_id = :cust_id
             GROUP BY years, months
             ORDER BY years, months;
             """
@@ -764,6 +762,7 @@ def request_page_action11():
     table_cols = ["sort_name", "average_trips"]
     if request.method == 'GET':
         return render_template("request11.html",
+                               num_times=1,
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
@@ -841,6 +840,7 @@ def request_page_action11():
 
         print("results -- ", results)
         return render_template("request11.html",
+                               num_times=data["n_times"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,
@@ -853,6 +853,7 @@ def request_page_action12():
     table_cols = ["product_name", "percentage"]
     if request.method == 'GET':
         return render_template("request12.html",
+                               num_times=1,
                                selected_from_date="-",
                                selected_to_date="-",
                                table_cols=table_cols,
@@ -915,6 +916,7 @@ def request_page_action12():
         print("request12_handle -- ", results)
 
         return render_template("request12.html",
+                               num_times=data["n_times"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,

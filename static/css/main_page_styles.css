@@ -25,6 +25,12 @@ a {
    color: #1d1f20;
    font-family: 'Raleway', sans-serif;
 }
+
+ #main-title h1{
+     font-weight: bold;
+    font-size: 2vw;
+ }
+
  main {
    display: block;
    margin: 0 auto;

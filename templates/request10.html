@@ -15,7 +15,7 @@
 <div class="wrapper wrapper-2">
     <h1>For customer </h1>
 
-    <form action="{{ url_for('request_page_action2') }}" method="post">
+    <form action="{{ url_for('request_page_action10') }}" method="post">
         <select class="select" name="cust_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
             {% for id, name in customer_lst %}
@@ -27,7 +27,7 @@
             {% endfor %}
         </select>
 
-        <h1> find the total number of reviews by months, which he left from: </h1>
+        <h1> find the total number of reviews by months, which he left from </h1>
 
         {% if selected_from_date == "-" %}
         <input class="select" type="date" name="from_date" class="date-picker">
@@ -35,7 +35,7 @@
         <input class="select" type="date" name="from_date" class="date-picker" value="{{ selected_from_date }}">
         {% endif %}
 
-        <h1> to: </h1>
+        <h1> to </h1>
         {% if selected_to_date == "-" %}
         <input class="select" type="date" name="to_date" class="date-picker">
         {% else %}
@@ -55,6 +55,7 @@
                             <tr style="color:white;background-color:grey">
                                 <th class="cell">{{ table_cols[0] }}</th>
                                 <th class="cell">{{ table_cols[1] }}</th>
+                                <th class="cell">{{ table_cols[2] }}</th>
                             </tr>
                         </table>
                     </td>
@@ -63,8 +64,9 @@
                     <td>
                         <div style="width:320px; height:160px; overflow:auto;">
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
-                                {% for month, num in result %}
+                                {% for year, month, num in result %}
                                 <tr>
+                                    <td class="cell">{{ year }}</td>
                                     <td class="cell">{{ month }}</td>
                                     <td class="cell">{{ num }}</td>
                                 </tr>
