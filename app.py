@@ -22,19 +22,18 @@ def request_page_action1():
     table_cols = ["customer_id", "customer_name"]
     if request.method == 'GET':
         return render_template("request1.html",
-                               agronom_lst=agronomists_list,
+                               agronomists_lst=agronomists_list,
                                selected_agr_id=1,
                                selected_from_date="-",
                                selected_to_date="-",
-                               sold_times=1,
                                table_cols=table_cols,
                                customers=[(0, "No result")])
 
     if request.method == 'POST':
         # Get a data in json format(similar)
         data = {
-            "agronom_id": int(request.form.get("agronom_id")),
-            "sold_times": int(request.form.get("sold_times")),
+            "agronomist_id": int(request.form.get("agronomist_id")),
+            "n_times": int(request.form.get("n_times")),
             "from_date": request.form.get("from_date"),
             "to_date": request.form.get("to_date")
         }
@@ -52,15 +51,15 @@ def request_page_action1():
             """
             SELECT customer_id, customer_name FROM Customer WHERE customer_id IN 
                 (SELECT customer_id FROM
-                (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = :agronom_id
+                (SELECT customer_id, COUNT(customer_id) AS num FROM Ordering WHERE agronomist_id = :agronomist_id
                     AND order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h 
-                WHERE h.num > :sold_times);
+                WHERE h.num > :n_times);
             """
         )
 
         rs = db.session.execute(statement, {
-            "agronom_id": data["agronom_id"],
-            "sold_times": data["sold_times"],
+            "agronomist_id": data["agronomist_id"],
+            "n_times": data["n_times"],
             "from_date": data["from_date"],
             "to_date": data["to_date"]
         })
@@ -71,11 +70,10 @@ def request_page_action1():
         print("request1_handle -- ", results)
 
         return render_template("request1.html",
-                               agronom_lst=agronomists_list,
-                               selected_agr_id=data["agronom_id"],
+                               agronomists_lst=agronomists_list,
+                               selected_agr_id=data["agronomist_id"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
-                               sold_times=data["sold_times"],
                                table_cols=table_cols,
                                customers=results)
 
@@ -169,7 +167,7 @@ def request_page_action3():
         # Get a data in json format(similar)
         data = {
             "cust_id": int(request.form.get("cust_id")),
-            "deg_num": int(request.form.get("deg_num")),
+            "n_times": int(request.form.get("n_times")),
             "from_date": request.form.get("from_date"),
             "to_date": request.form.get("to_date")
         }
@@ -189,14 +187,14 @@ def request_page_action3():
 (SELECT agronomist_id FROM (SELECT agronomist_id, COUNT(agronomist_id) AS num FROM 
 Degustation INNER JOIN Degustation_Customer ON 
 Degustation.degustation_id = Degustation_Customer.degustation_id 
-WHERE Degustation_Customer.customer_id = :cust_id GROUP BY agronomist_id) h WHERE h.num > :deg_num
+WHERE Degustation_Customer.customer_id = :cust_id GROUP BY agronomist_id) h WHERE h.num > :n_times
 AND order_date BETWEEN :from_date AND :to_date);
             """
         )
 
         rs = db.session.execute(statement, {
             "cust_id": data["cust_id"],
-            "deg_num": data["deg_num"],
+            "n_times": data["n_times"],
             "from_date": data["from_date"],
             "to_date": data["to_date"]
         })
@@ -353,26 +351,20 @@ AND agronomist_id IN
 
 @app.route('/request6', methods=['GET', 'POST'])
 def request_page_action6():
-    statement = text("""SELECT product_id FROM product""")
-
-    products_num = len(db.session.execute(statement).all())
-    db.session.commit()
-    db.session.close()
 
     table_cols = ["customer_id", "customer_name"]
     if request.method == 'GET':
-        return render_template("request1.html",
-                               products_num=products_num,
+        return render_template("request6.html",
                                selected_from_date="-",
                                selected_to_date="-",
-                               sold_times=1,
                                table_cols=table_cols,
                                customers=[(0, "No result")])
 
     if request.method == 'POST':
         # Get a data in json format(similar)
         data = {
-            "products_num": int(request.form.get("products_num")),
+            "n_times": int(request.form.get("n_times")),
+
             "from_date": request.form.get("from_date"),
             "to_date": request.form.get("to_date")
         }
@@ -391,12 +383,12 @@ def request_page_action6():
             SELECT customer_name FROM Customer WHERE customer_id IN
 (SELECT customer_id FROM 
  (SELECT customer_id, COUNT(DISTINCT product_id) AS num FROM Ordering WHERE order_date BETWEEN :from_date AND :to_date GROUP BY customer_id) h
- WHERE h.num > :products_num);
+ WHERE h.num > :n_times);
             """
         )
 
         rs = db.session.execute(statement, {
-            "products_num": data["products_num"],
+            "n_times": data["n_times"],
             "from_date": data["from_date"],
             "to_date": data["to_date"]
         })
@@ -407,7 +399,6 @@ def request_page_action6():
         print("request6_handle -- ", results)
 
         return render_template("request6.html",
-                               products_num=data["products_num"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,

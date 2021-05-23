@@ -13,7 +13,7 @@
 <body style="background-image: url('../static/images/request3.png');">
 
 <div class="wrapper wrapper-3">
-    <h1>Для користувача </h1>
+    <h1>For customer </h1>
 
     <form action="{{ url_for('request_page_action3') }}" method="post">
         <select class="select" name="cust_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
@@ -27,17 +27,8 @@
             {% endfor %}
         </select>
 
-        <h1>знайти усіх агрономів, які проводили для нього дегустацію хоча б </h1>
-            <select class="select" name="deg_times" id="1" onfocus='this.size=5;' onblur='this.size=1;'
-                onchange='this.size=1; this.blur();'>
-            {% for i in range(0, 11) %}
-                {% if i == deg_times %}
-                    <option value="{{ i }}" selected>{{ i }}</option>
-                {% else %}
-                    <option value="{{ i }}">{{ i }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+        <h1>find all the agronomists who have conducted a tasting for him at least</h1>
+            <input type="number" min="1" name="n_times" class="N-picker">
 
         <h1> times for dates: from </h1>
         {% if selected_from_date == "-" %}
