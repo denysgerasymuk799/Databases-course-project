@@ -4,7 +4,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    
     SECRET_KEY = "<SECRET_KEY>"
     host = "127.0.0.1"
     database = "db_course_project"
