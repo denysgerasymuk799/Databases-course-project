@@ -13,11 +13,22 @@ def get_main_page():
 
 @app.route('/request1', methods=['GET', 'POST'])
 def request_page_action1():
-    statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
+    """
+    Use sqlalchemy instead of:
 
-    agronomists_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+        statement = text(\"""
+            SELECT
+            agronomist_id, agronomist_name
+            FROM
+            agronomist
+        \""")
+
+        agronomists_list = db.session.execute(statement).all()
+        db.session.commit()
+        db.session.close()
+    """
+
+    agronomists_list = Agronomist.query.all()
 
     table_cols = ["customer_name"]
     if request.method == 'GET':
@@ -89,13 +100,7 @@ def request_page_action1():
 
 @app.route('/request2', methods=['GET', 'POST'])
 def request_page_action2():
-    statement = text("""SELECT customer_id, customer_name FROM customer""")
-
-    customer_values_sample = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
-
-    print("request_page_action2", customer_values_sample)
+    customer_values_sample = Customer.query.all()
 
     table_cols = ["product_name"]
     if request.method == 'GET':
@@ -155,11 +160,7 @@ def request_page_action2():
 
 @app.route('/request3', methods=['GET', 'POST'])
 def request_page_action3():
-    statement = text("""SELECT customer_id, customer_name FROM customer""")
-
-    customer_values_sample = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    customer_values_sample = Customer.query.all()
 
     print("request_page_action3", customer_values_sample)
 
@@ -234,11 +235,7 @@ def request_page_action3():
 
 @app.route('/request4', methods=['GET', 'POST'])
 def request_page_action4():
-    statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist;""")
-
-    agronomists_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    agronomists_list = Agronomist.query.all()
 
     table_cols = ["agronomist_name"]
     if request.method == 'GET':
@@ -298,11 +295,7 @@ def request_page_action4():
 
 @app.route('/request5', methods=['GET', 'POST'])
 def request_page_action5():
-    statement = text("""SELECT customer_id, customer_name FROM customer""")
-
-    customer_values_sample = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    customer_values_sample = Customer.query.all()
 
     print("request_page_action5", customer_values_sample)
 
@@ -367,7 +360,6 @@ def request_page_action5():
 
 @app.route('/request6', methods=['GET', 'POST'])
 def request_page_action6():
-
     table_cols = ["customer_name"]
     if request.method == 'GET':
         return render_template("request6.html",
@@ -495,13 +487,8 @@ def request_page_action7():
 
 @app.route('/request8', methods=['GET', 'POST'])
 def request_page_action8():
-    statement1 = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
-    statement2 = text("""SELECT customer_id, customer_name FROM customer""")
-
-    customer_values_sample = db.session.execute(statement2).all()
-    agronomists_list = db.session.execute(statement1).all()
-    db.session.commit()
-    db.session.close()
+    customer_values_sample = Customer.query.all()
+    agronomists_list = Agronomist.query.all()
 
     table_cols = ["degustation_id", "degustation_date"]
     if request.method == 'GET':
@@ -592,11 +579,7 @@ def request_page_action8():
 
 @app.route('/request9', methods=['GET', 'POST'])
 def request_page_action9():
-    statement = text("""SELECT agronomist_id, agronomist_name FROM agronomist""")
-
-    agronomists_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    agronomists_list = Agronomist.query.all()
 
     table_cols = ["product_id", "name", "times"]
     if request.method == 'GET':
@@ -691,11 +674,7 @@ def request_page_action9():
 
 @app.route('/request10', methods=['GET', 'POST'])
 def request_page_action10():
-    statement = text("""SELECT customer_id, customer_name FROM customer""")
-
-    customer_values_sample = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    customer_values_sample = Customer.query.all()
 
     print("request_page_action10", customer_values_sample)
 
@@ -847,7 +826,6 @@ def request_page_action11():
 
 @app.route('/request12', methods=['GET', 'POST'])
 def request_page_action12():
-
     table_cols = ["product_name", "percentage"]
     if request.method == 'GET':
         return render_template("request12.html",
@@ -923,15 +901,7 @@ def request_page_action12():
 
 @app.route('/money1', methods=['GET', 'POST'])
 def money_page_action1():
-    statement = text(
-        """
-        SELECT customer_id, customer_name FROM Customer
-        """
-    )
-
-    customers_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    customers_list = Customer.query.all()
 
     table_cols = ["Total sum, $"]
     if request.method == 'GET':
@@ -990,15 +960,8 @@ def money_page_action1():
 
 @app.route('/money2', methods=['GET', 'POST'])
 def money_page_action2():
-    statement = text(
-        """
-        SELECT agronomist_id, agronomist_name FROM agronomist
-        """
-    )
-
-    agronomists_list = db.session.execute(statement).all()
-    db.session.commit()
-    db.session.close()
+    agronomists_list = Agronomist.query.all()
+    print("agronomists_list -- ", agronomists_list)
 
     table_cols = ["Total sum, $"]
     if request.method == 'GET':

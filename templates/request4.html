@@ -13,18 +13,18 @@
 <body style="background-image: url('../static/images/request2.png');">
 
 <div class="wrapper wrapper-2">
-    <div id="button-back"><a href="index.html">home page</a></div>
+    <div id="button-back"><a href="/">Home page</a></div>
 
     <h1>For agronomist </h1>
 
     <form action="{{ url_for('request_page_action4') }}" method="post">
         <select class="select" name="agronomist_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
-            {% for id, name in agronomists_list %}
-                {% if selected_agronomist_id == id %}
-                <option value="{{ id }}" selected>{{ name }}</option>
+            {% for agronomist in agronomists_list %}
+                {% if selected_agronomist_id == agronomist.agronomist_id %}
+                <option value="{{ agronomist.agronomist_id }}" selected>{{ agronomist.agronomist_name }}</option>
                 {% else %}
-                <option value="{{ id }}">{{ name }}</option>
+                <option value="{{ agronomist.agronomist_id }}">{{ agronomist.agronomist_name }}</option>
                 {% endif %}
             {% endfor %}
         </select>

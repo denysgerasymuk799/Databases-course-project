@@ -3,34 +3,34 @@
 <head>
     <meta charset="utf-8">
     <title>AppLab</title>
-
     <link href="../static/css/reset.css" rel="stylesheet" type="text/css">
+
     <link href="../static/css/fonts.css" rel="stylesheet" type="text/css">
+
     <link href="../static/css/request_styles.css" rel="stylesheet" type="text/css">
 
 </head>
 
-<body style="background-image: url('../static/images/request2.png');">
+<body style="background-image: url('../static/images/money_page.png');">
 
-<div class="wrapper wrapper-2">
-    <div id="button-back"><a href="index.html">home page</a></div>
+<div class="wrapper">
+    <h1>For agronomist </h1>
 
-    <h1>For customer </h1>
-
-    <form action="{{ url_for('request_page_action2') }}" method="post">
-        <select class="select" name="cust_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
+    <form action="{{ url_for('money_page_action2') }}" method="post">
+        <select class="select" name="agronom_id" id="" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
-            {% for id, name in customer_lst %}
-            {% if selected_cust_id == id %}
-            <option value="{{ id }}" selected>{{ name }}</option>
+            {% for agronomist in agronom_lst %}
+            {% if selected_agronomist_id == agronomist.agronomist_id %}
+            <option value="{{ agronomist.agronomist_id }}" selected>{{ agronomist.agronomist_name }}</option>
             {% else %}
-            <option value="{{ id }}">{{ name }}</option>
+            <option value="{{ agronomist.agronomist_id }}">{{ agronomist.agronomist_name }}</option>
             {% endif %}
             {% endfor %}
         </select>
 
-        <h1> find all products that he bought from </h1>
+        <h1> print the profit </h1>
 
+        <h1> for the specified period: from </h1>
         {% if selected_from_date == "-" %}
         <input class="select" type="date" name="from_date" class="date-picker">
         {% else %}
@@ -48,7 +48,7 @@
             <input class="submit-btn" type="submit" name="submit_button" value="Submit">
         </div>
 
-        <div class="result-table result-table2">
+        <div class="result-table">
             <h2>Result</h2>
             <table cellspacing="0" cellpadding="0" border="0" width="325">
                 <tr>
@@ -64,9 +64,9 @@
                     <td>
                         <div style="width:320px; height:160px; overflow:auto;">
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
-                                {% for name in products %}
+                                {% for sum in total_sum %}
                                 <tr>
-                                    <td class="cell">{{ name[0] }}</td>
+                                    <td class="cell">{{ sum }}</td>
                                 </tr>
                                 {% endfor %}
                             </table>

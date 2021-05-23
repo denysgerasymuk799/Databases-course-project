@@ -13,18 +13,18 @@
 <body style="background-image: url('../static/images/request2.png');">
 
 <div class="wrapper wrapper-2">
-    <div id="button-back"><a href="index.html">home page</a></div>
+    <div id="button-back"><a href="/">Home page</a></div>
 
     <h1>For customer </h1>
 
     <form action="{{ url_for('request_page_action10') }}" method="post">
         <select class="select" name="cust_id" id="" class="form-control" onfocus='this.size=5;' onblur='this.size=1;'
                 onchange='this.size=1; this.blur();'>
-            {% for id, name in customer_lst %}
-                {% if selected_cust_id == id %}
-                <option value="{{ id }}" selected>{{ name }}</option>
+            {% for customer in customer_lst %}
+                {% if selected_cust_id == customer.customer_id %}
+                <option value="{{ customer.customer_id }}" selected>{{ customer.customer_name }}</option>
                 {% else %}
-                <option value="{{ id }}">{{ name }}</option>
+                <option value="{{ customer.customer_id }}">{{ customer.customer_name }}</option>
                 {% endif %}
             {% endfor %}
         </select>
