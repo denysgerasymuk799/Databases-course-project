@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>AppLab</title>
 
-    <link href="../static/css/reset.css" rel="stylesheet" type="text/css" >
+    <link href="../static/css/reset.css" rel="stylesheet" type="text/css">
     <link href="../static/css/fonts.css" rel="stylesheet" type="text/css">
     <link href="../static/css/request_styles.css" rel="stylesheet" type="text/css">
 
@@ -12,7 +12,7 @@
 
 <body style="background-image: url('../static/images/request3.png');">
 
-<div class="wrapper wrapper-5">
+<div class="wrapper wrapper-3">
     <h1>For customer </h1>
 
     <form action="{{ url_for('request_page_action5') }}" method="post">
@@ -20,32 +20,35 @@
                 onchange='this.size=1; this.blur();'>
             {% for id, name in customer_lst %}
                 {% if selected_cust_id == id %}
-                <option value="{{ id }}" selected>{{ name }}</option>
+                    <option value="{{ id }}" selected>{{ name }}</option>
                 {% else %}
-                <option value="{{ id }}">{{ name }}</option>
+                    <option value="{{ id }}">{{ name }}</option>
                 {% endif %}
             {% endfor %}
         </select>
 
-        <h1>find all agronomists who have sold him at least something and have conducted a tasting for him from</h1>
-            {% if selected_from_date == "-" %}
-            <input class="select" type="date" name="from_date" class="date-picker">
-            {% else %}
-            <input class="select" type="date" name="from_date" class="date-picker" value="{{ selected_from_date }}">
-            {% endif %}
+        <h1>find all agronomists that sold him any product and conducted at least one degustation
+            for him </h1>
+
+        <h1> from </h1>
+        {% if selected_from_date == "-" %}
+        <input class="select" type="date" name="from_date" class="date-picker">
+        {% else %}
+        <input class="select" type="date" name="from_date" class="date-picker" value="{{ selected_from_date }}">
+        {% endif %}
 
         <h1> to </h1>
-            {% if selected_to_date == "-" %}
-            <input class="select" type="date" name="to_date" class="date-picker">
-            {% else %}
-            <input class="select" type="date" name="to_date" class="date-picker" value="{{ selected_to_date }}">
-            {% endif %}
+        {% if selected_to_date == "-" %}
+        <input class="select" type="date" name="to_date" class="date-picker">
+        {% else %}
+        <input class="select" type="date" name="to_date" class="date-picker" value="{{ selected_to_date }}">
+        {% endif %}
 
         <div class="btn-container">
             <input class="submit-btn" type="submit" name="submit_button" value="Submit">
         </div>
 
-        <div class="result-table result-table5">
+        <div class="result-table3">
             <h2>Result</h2>
             <table cellspacing="0" cellpadding="0" border="0" width="325">
                 <tr>
@@ -63,7 +66,7 @@
                             <table cellspacing="0" cellpadding="1" border="1" width="300">
                                 {% for name in agronomists %}
                                 <tr>
-                                    <td class="cell">{{ name }}</td>
+                                    <td class="cell">{{ name[0] }}</td>
                                 </tr>
                                 {% endfor %}
                             </table>
@@ -72,7 +75,7 @@
                 </tr>
             </table>
         </div>
-    </form>>
+    </form>
 </div>
 
 </body>

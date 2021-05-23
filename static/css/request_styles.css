@@ -119,7 +119,7 @@ body {
 }
 
 .result-table3 {
-    position: relative;
+    position: absolute;
     margin-top: -32vw;
     margin-left: -35vw;
 }
@@ -134,4 +134,8 @@ body {
 .cell {
     width: 15vw;
     text-align: center;
+}
+
+.number-picker {
+    font-size: 1.2vw;
 }

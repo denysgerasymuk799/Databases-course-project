@@ -17,7 +17,7 @@
     <h1>Display products that were purchased by at least different consumers number:</h1>
 
     <form action="{{ url_for('request_page_action12') }}" method="post">
-        <input type="number" min="1" name="n_times" class="N-picker" value="{{ num_times }}">
+        <input type="number" min="1" name="n_times" class="N-picker number-picker" value="{{ num_times }}">
 
         <h1> in descending order of the percentage of returns. times for dates: from </h1>
         {% if selected_from_date == "-" %}
