@@ -240,8 +240,6 @@ def request_page_action4():
     db.session.commit()
     db.session.close()
 
-    # print("request_page_action2", customer_values_sample)
-
     table_cols = ["agronomist_name"]
     if request.method == 'GET':
         return render_template("request4.html",
@@ -291,7 +289,7 @@ def request_page_action4():
 
         return render_template("request4.html",
                                agronomists_list=agronomists_list,
-                               selected_cust_id=data["agronomist_id"],
+                               selected_agronomist_id=data["agronomist_id"],
                                selected_from_date=data["from_date"],
                                selected_to_date=data["to_date"],
                                table_cols=table_cols,

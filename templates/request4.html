@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>AppLab</title>
 
-    <link href="../static/css/reset.css" rel="stylesheet" type="text/css" >
+    <link href="../static/css/reset.css" rel="stylesheet" type="text/css">
     <link href="../static/css/fonts.css" rel="stylesheet" type="text/css">
     <link href="../static/css/request_styles.css" rel="stylesheet" type="text/css">
 
@@ -12,7 +12,7 @@
 
 <body style="background-image: url('../static/images/request2.png');">
 
-<div class="wrapper wrapper-4">
+<div class="wrapper wrapper-2">
     <h1>For agronomist </h1>
 
     <form action="{{ url_for('request_page_action4') }}" method="post">
@@ -27,7 +27,7 @@
             {% endfor %}
         </select>
 
-        <h1> find all agronomists that go on a business trip with him/her from </h1>
+        <h1> find all agronomists with whom he went on a business trip from </h1>
 
         {% if selected_from_date == "-" %}
         <input class="select" type="date" name="from_date" class="date-picker">
@@ -46,7 +46,7 @@
             <input class="submit-btn" type="submit" name="submit_button" value="Submit">
         </div>
 
-        <div class="result-table result-table4">
+        <div class="result-table result-table2">
             <h2>Result</h2>
             <table cellspacing="0" cellpadding="0" border="0" width="325">
                 <tr>
@@ -54,7 +54,6 @@
                         <table cellspacing="0" cellpadding="1" border="1" width="300">
                             <tr style="color:white;background-color:grey">
                                 <th class="cell">{{ table_cols[0] }}</th>
-                                <th class="cell">{{ table_cols[1] }}</th>
                             </tr>
                         </table>
                     </td>
@@ -74,7 +73,7 @@
                 </tr>
             </table>
         </div>
-    </form>>
+    </form>
 </div>
 
 </body>
